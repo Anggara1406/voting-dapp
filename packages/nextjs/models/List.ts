@@ -1,0 +1,58 @@
+import mongoose from "mongoose";
+
+export interface ListDocument extends mongoose.Document {
+  name: string;
+  creator: string;
+  description: string;
+  impactEvaluation: string;
+  tags?: string[];
+  likes?: string[];
+  projects: {
+    project: mongoose.Types.ObjectId;
+    allocation: number;
+  }[];
+}
+
+const listSchema = new mongoose.Schema<ListDocument>({
+  name: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
+  },
+  creator: {
+    type: String,
+    required: true,
+  },
+  impactEvaluation: {
+    type: String,
+  },
+  tags: [
+    {
+      type: String,
+    },
+  ],
+  likes: [
+    {
+      type: String,
+    },
+  ],
+  projects: [
+    {
+      project: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Project",
+        required: true,
+      },
+      allocation: {
+        type: Number,
+        default: 0,
+      },
+    },
+  ],
+});
+
+const List = mongoose.models.Lists || mongoose.model("Lists", listSchema);
+
+export default List;
